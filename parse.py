@@ -6,22 +6,31 @@ def fetch_data(data_file):
     with open(data_file, 'r') as d:
         reader = csv.reader(d)
 
+        go = False
+
         for row in reader:
 
             try:
-                if row[0].startswith('From'):
-
-                    year = row[3].split(' ')[1]
-
-                    yield {
-                        'country': row[2],
-                        'year': year,
-                        'state': row[5],
-                        'city': row[7],
-                        'refugees': row[8]
-                    }
+                print(row[0])
             except:
-                pass
+                go = not go
+
+            if go:
+
+                try:
+                    if row[0].startswith('From'):
+
+                        year = row[3].split(' ')[1]
+
+                        yield {
+                            'country': row[5],
+                            'year': year,
+                            'state': row[2],
+                            'city': row[7],
+                            'refugees': row[8]
+                        }
+                except:
+                    pass
 
 
 def doit():
