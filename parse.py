@@ -11,7 +11,7 @@ def fetch_data(data_file):
         for row in reader:
 
             try:
-                print(row[0])
+                row[0]
             except:
                 go = not go
 
