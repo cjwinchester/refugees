@@ -3,25 +3,19 @@ import csv
 
 
 def fetch_data(data_file):
+    '''Parse data from a WRAPS csv into something sensical'''
     with open(data_file, 'r') as d:
         reader = csv.reader(d)
-
         go = False
-
         for row in reader:
-
             try:
                 row[0]
-            except:
+            except Exception as e:
                 go = not go
-
             if go:
-
                 try:
                     if row[0].startswith('From'):
-
                         year = row[3].split(' ')[1]
-
                         yield {
                             'country': row[5],
                             'year': year,
@@ -29,29 +23,17 @@ def fetch_data(data_file):
                             'city': row[7],
                             'refugees': row[8]
                         }
-                except:
+                except Exception as e:
                     pass
 
 
-def doit():
-
-    with open('us-refugees.csv', 'w') as m:
-
-        headers = ['country', 'year', 'state', 'city', 'refugees']
-
-        writer = csv.DictWriter(m, fieldnames=headers)
-
-        writer.writeheader()
-
-        data_files = os.listdir('rawdata')
-
-        for f in data_files:
-
-            x = fetch_data(os.path.join('rawdata', f))
-
-            for thing in x:
-                writer.writerow(thing)
-
-
 if __name__ == '__main__':
-    doit()
+    with open('us-refugees.csv', 'w') as m:
+        headers = ['country', 'year', 'state', 'city', 'refugees']
+        writer = csv.DictWriter(m, fieldnames=headers)
+        writer.writeheader()
+        data_files = sorted(os.listdir('raw_data'))
+        for f in data_files:
+            x = fetch_data(os.path.join('raw_data', f))
+            for record in x:
+                writer.writerow(record)
