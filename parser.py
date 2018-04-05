@@ -4,10 +4,11 @@ import csv
 import us
 
 
+ST = [x.name.casefold() for x in us.states.STATES_AND_TERRITORIES]
+
+
 def fetch_data(data_file):
     '''Parse data from a WRAPS csv into something sensical'''
-
-    state_names = [x.name.casefold() for x in us.states.STATES_AND_TERRITORIES]
 
     with open(data_file, 'r') as d:
         reader = csv.reader(d)
@@ -27,14 +28,14 @@ def fetch_data(data_file):
 
                 # handle georgia, which is both a country and a state
                 if row[2].casefold().strip() == 'georgia':
-                    if row[5].casefold().strip() in state_names:
+                    if row[5].casefold().strip() in ST:
                         country = row[2].strip()
                         state = row[5].strip()
                     else:
                         state = row[2].strip()
                         country = row[5].strip()
                 else:
-                    if row[2].casefold().strip() in state_names:
+                    if row[2].casefold().strip() in ST:
                         state = row[2]
                         country = row[5]
                     else:
