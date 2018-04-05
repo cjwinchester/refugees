@@ -4,27 +4,29 @@ import csv
 
 def fetch_data(data_file):
     '''Parse data from a WRAPS csv into something sensical'''
+
     with open(data_file, 'r') as d:
         reader = csv.reader(d)
-        go = False
+
+        # skip header jank
+        next(reader)
+        next(reader)
+        next(reader)
+        next(reader)
+
         for row in reader:
             try:
-                row[0]
-            except Exception as e:
-                go = not go
-            if go:
-                try:
-                    if row[0].startswith('From'):
-                        year = row[3].split(' ')[1]
-                        yield {
-                            'country': row[5],
-                            'year': year,
-                            'state': row[2],
-                            'city': row[7],
-                            'refugees': row[8]
-                        }
-                except Exception as e:
-                    pass
+                assert(row[0].startswith('From'))
+                year = row[3].split(' ')[1]
+                yield {
+                    'country': row[5],
+                    'year': year,
+                    'state': row[2],
+                    'city': row[7],
+                    'refugees': row[8]
+                }
+            except (AssertionError, IndexError):
+                pass
 
 
 if __name__ == '__main__':
